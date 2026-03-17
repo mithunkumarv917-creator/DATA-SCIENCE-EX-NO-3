@@ -42,9 +42,85 @@ We use this categorical data encoding technique when the features are nominal(do
 
 • Yeojohnson method
 
-# CODING AND OUTPUT:
-       # INCLUDE YOUR CODING AND OUTPUT SCREENSHOTS HERE
+# CODING 
+```
+Step 1 : Import Necessary Libraries
+
+import pandas as pd
+import numpy as np
+from sklearn.preprocessing import LabelEncoder, StandardScaler, PowerTransformer
+from scipy.stats import boxcox
+
+Step 2 : Load the Dataset
+
+data = pd.read_csv('Data_to_Transform.csv')
+print("Original Dataset:")
+print(data.head())
+
+Step 3 : Handle Missing Values (Fill numeric columns with mean)
+
+data.fillna(data.mean(numeric_only=True), inplace=True)
+
+Select a suitable numeric column for transformation
+
+numeric_column = data.select_dtypes(include=np.number).columns[0]
+print(f"\nColumn Selected for Transformation: {numeric_column}")
+
+Keep only positive values for log and boxcox
+
+positive_data = data[data[numeric_column] > 0].copy()
+
+Step 4 : Log Transformation
+
+positive_data['Log_Transform'] = np.log(positive_data[numeric_column])
+
+Step 5 : Reciprocal Transformation
+
+positive_data['Reciprocal_Transform'] = 1 / positive_data[numeric_column]
+
+Step 6 : Square Root Transformation
+
+positive_data['Sqrt_Transform'] = np.sqrt(positive_data[numeric_column])
+
+### Step 7: Square Transformation
+
+positive_data['Square_Transform'] = np.square(positive_data[numeric_column])
+
+Step 8: Box-Cox Transformation (only positive values)
+
+positive_data['BoxCox_Transform'], lambda_value = boxcox(positive_data[numeric_column])
+print(f"\nBox-Cox Lambda Value: {lambda_value}")
+
+Step 9: Yeo-Johnson Transformation (works with zero/negative values)
+
+pt = PowerTransformer(method='yeo-johnson')
+data['YeoJohnson_Transform'] = pt.fit_transform(data[[numeric_column]])
+
+Standard Scaling
+
+scaler = StandardScaler()
+data['Standard_Scaled'] = scaler.fit_transform(data[[numeric_column]])
+
+Save the transformed dataset
+
+positive_data.to_csv('Transformed_Positive_Data.csv', index=False)
+data.to_csv('Transformed_Full_Data.csv', index=False)
+
+print("\nTransformation Completed Successfully.")
+print("\nTransformed Dataset Preview:")
+print(positive_data.head())
+
+```
+
+# Output
+<img width="814" height="578" alt="554097698-bb346e7f-e54a-451b-948c-4516685e68fd" src="https://github.com/user-attachments/assets/8dbdbd73-f549-4efa-91f6-2c5068d98eee" />
+<img width="698" height="248" alt="554097884-a010e945-402c-47c7-a026-cb0d7b6fd8ce" src="https://github.com/user-attachments/assets/7374ec87-b009-45ee-b4ef-28353548188c" />
+
+<img width="915" height="238" alt="554098090-3090a78c-cfbd-4aad-a9ec-faac382ec045" src="https://github.com/user-attachments/assets/5a4724d2-751c-454e-b4dd-ff43d0129a0d" />
+<img width="822" height="736" alt="554098205-e35f96a9-c0e8-4655-90cf-924a70230e74" src="https://github.com/user-attachments/assets/8e7126c9-ac53-453c-b9e4-390f300670e4" />
+
+
 # RESULT:
-       # INCLUDE YOUR RESULT HERE
+   Thus , the implementation of feature encoding and feature transformation is completed successfully
 
        
